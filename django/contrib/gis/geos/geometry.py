@@ -125,8 +125,10 @@ class GEOSGeometry(GEOSBase, ListMixin):
         return self.clone()
 
     def __str__(self):
-        "EWKT is used for the string representation."
-        return self.ewkt
+        "WKT is used for the string representation."
+        # NOTE, this is a line patched by Keypro.
+        # Originally ewkt is retuned, which breaks our export.
+        return self.wkt
 
     def __repr__(self):
         "Short-hand representation because WKT may be very large."
