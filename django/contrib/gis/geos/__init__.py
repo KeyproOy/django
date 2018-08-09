@@ -5,9 +5,9 @@ for more details: https://docs.djangoproject.com/en/dev/ref/contrib/gis/geos/
 __all__ = ['HAS_GEOS']
 
 try:
-    from .libgeos import geos_version, geos_version_info  # NOQA: flake8 detects only the last __all__
+    from .libgeos import geos_version  # NOQA: flake8 detects only the last __all__
     HAS_GEOS = True
-    __all__ += ['geos_version', 'geos_version_info']
+    __all__ += ['geos_version', ]
 except ImportError:
     HAS_GEOS = False
 

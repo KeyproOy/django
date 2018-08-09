@@ -14,6 +14,7 @@ from ctypes.util import find_library
 
 from django.contrib.gis.geos.error import GEOSException
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.version import get_version_tuple
 
 logger = logging.getLogger('django.contrib.gis')
 
@@ -133,28 +134,10 @@ version_regex = re.compile(
     r'((rc(?P<release_candidate>\d+))|dev)?-CAPI-(?P<capi_version>\d+\.\d+\.\d+)( r\d+)?$'
 )
 
-
-def geos_version_info():
-    """
-    Returns a dictionary containing the various version metadata parsed from
-    the GEOS version string, including the version number, whether the version
-    is a release candidate (and what number release candidate), and the C API
-    version.
-    """
-    ver = geos_version().decode()
-    m = version_regex.match(ver)
-    if not m:
-        raise GEOSException('Could not parse version info string "%s"' % ver)
-    return {key: m.group(key) for key in (
-        'version', 'release_candidate', 'capi_version', 'major', 'minor', 'subminor')}
-
 # Version numbers and whether or not prepared geometry support is available.
-_verinfo = geos_version_info()
-GEOS_MAJOR_VERSION = int(_verinfo['major'])
-GEOS_MINOR_VERSION = int(_verinfo['minor'])
-GEOS_SUBMINOR_VERSION = int(_verinfo['subminor'])
+_verinfo = geos_version().decode()
+GEOS_VERSION = get_version_tuple(_verinfo)
 del _verinfo
-GEOS_VERSION = (GEOS_MAJOR_VERSION, GEOS_MINOR_VERSION, GEOS_SUBMINOR_VERSION)
 
 # Here we set up the prototypes for the initGEOS_r and finishGEOS_r
 # routines.  These functions aren't actually called until they are
