@@ -223,7 +223,9 @@ WHEN (new.%(col_name)s IS NULL)
         return "DROP SEQUENCE %s;" % self.quote_name(self._get_sequence_name(table))
 
     def fetch_returned_insert_id(self, cursor):
-        return int(cursor._insert_id_var.getvalue())
+        value = cursor._insert_id_var.getvalue()
+        # cx_Oracle < 7 returns value, >= 7 returns list with single value.
+        return value[0] if isinstance(value, list) else int(values)
 
     def field_cast_sql(self, db_type, internal_type):
         if db_type and db_type.endswith('LOB'):
